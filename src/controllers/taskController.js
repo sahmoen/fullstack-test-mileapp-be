@@ -52,15 +52,31 @@ export const getTasks = async (req, res, next) => {
 };
 
 // =================== CREATE TASK ===================
-export const createTask = async (req, res, next) => {
+// export const createTask = async (req, res, next) => {
+//   try {
+//     const { error } = taskCreateSchema.validate(req.body);
+//     if (error) return sendError(res, 400, error.details[0].message);
+
+//     const task = await Task.create(req.body);
+//     return sendSuccess(res, 201, { data: task });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+export const createTask = async (req, res) => {
   try {
-    const { error } = taskCreateSchema.validate(req.body);
+    const { error } = taskSchema.validate(req.body);
     if (error) return sendError(res, 400, error.details[0].message);
 
-    const task = await Task.create(req.body);
-    return sendSuccess(res, 201, { data: task });
+    const newTask = await Task.create({
+      ...req.body,
+      user: req.user.id,
+    });
+
+    res.status(201).json(newTask);
   } catch (err) {
-    next(err);
+    console.error(err);
+    sendError(res, 500, "Failed to create task");
   }
 };
 
