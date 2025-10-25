@@ -6,6 +6,7 @@ import {
   refreshToken,
   forgotPassword,
   resetPassword,
+  verifyResetToken,
   getProfile,
   updateProfile,
   logout,
@@ -20,7 +21,9 @@ router.post("/logout", protect, logout);
 router.get("/me", protect, getProfile);
 router.patch("/me", protect, updateProfile);
 
-router.post("/forgot-password", protect, forgotPassword);
+// Password reset routes
+router.post("/forgot-password", forgotPassword);
+router.get("/verify-reset-token/:token", verifyResetToken);
 router.post("/reset-password", resetPassword);
 
 export default router;
